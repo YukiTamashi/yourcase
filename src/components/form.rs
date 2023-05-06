@@ -26,7 +26,7 @@ pub fn form() -> Html{
             <InputField ..loja/>
             <InputField ..promotor/>
             <InputField ..modelo/>
-            <Values />
+            <Values valor ={valor}/>
             <button type="submit">{"Enviar"}</button>
         </form>
     )

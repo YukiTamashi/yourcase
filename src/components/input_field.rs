@@ -7,16 +7,6 @@ pub struct Input{
     pub state: UseStateHandle<String>
 }
 
-#[macro_export]
-macro_rules! create_input {
-    ($name:expr) => {
-        Input {
-            name: String::from($name),
-            state: use_state(String::new),
-        }
-    };
-}
-
 #[function_component(InputField)]
 pub fn input_field(props: &Input) -> Html{
     html!(
@@ -30,10 +20,9 @@ pub fn input_field(props: &Input) -> Html{
 }
 
 fn on_input(handle: UseStateHandle<String>) -> Callback<InputEvent>{
-    let promoter = handle.clone();
     Callback::from(move |e: InputEvent| {
         if let Some(input) = e.target_dyn_into::<web_sys::HtmlInputElement>() {
-            promoter.set(input.value());
+            handle.set(input.value());
         }
     })
 }

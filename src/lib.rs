@@ -7,7 +7,7 @@ use crate::components::form::*;
 #[function_component(App)]
 pub fn app() -> Html {
     html! {
-        <main class="container">
+        <main class="main">
             <Form />
         </main>
     }

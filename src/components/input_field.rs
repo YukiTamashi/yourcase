@@ -1,16 +1,31 @@
 use yew::prelude::*;
 
 
-#[derive(Properties, PartialEq)]
+#[derive(Properties, PartialEq, Clone)]
 pub struct Input{
     pub name: String,
     pub state: UseStateHandle<String>
 }
 
+#[macro_export]
+macro_rules! create_input {
+    ($name:expr) => {
+        Input {
+            name: String::from($name),
+            state: use_state(String::new),
+        }
+    };
+}
+
 #[function_component(InputField)]
 pub fn input_field(props: &Input) -> Html{
     html!(
-        <input id={props.name.clone()} type="text" value={props.name.clone()} placeholder="Promotor" oninput={on_input(props.state.clone())} />
+        <input 
+        class="centered-text"
+        id={props.name.clone()} 
+        type="text" value={(*props.state).clone()} 
+        placeholder={props.name.clone()} 
+        oninput={on_input(props.state.clone())} />
     )
 }
 

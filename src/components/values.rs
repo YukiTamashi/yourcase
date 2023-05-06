@@ -4,7 +4,6 @@ use yew::prelude::*;
 pub fn values() -> Html {
     html!(
         <div>
-            <label for="value">{"Virou: "}</label>
             <select id="value" value={"temp".to_string()} /*onchange={todo!()}*/>
                 {for create_options()}
             </select>

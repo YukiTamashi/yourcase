@@ -1,15 +1,12 @@
-use std::future::Future;
-
 use yew::prelude::*;
 use serde::{Serialize, Deserialize};
 use crate::components::input_field::*;
 use crate::components::values::*;
-use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
-use serde_wasm_bindgen::to_value;
+use crate::tauri::submit_form;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-struct FormData{
+pub struct FormData{
     loja: String,
     promotor: String, 
     modelo: String,
@@ -51,11 +48,6 @@ impl FormInternal{
 }
 
 
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = ["window", "__TAURI__", "tauri"])]
-    async fn invoke(cmd: &str, args: JsValue) -> JsValue;
-}
 
 #[function_component(Form)]
 pub fn form() -> Html{
@@ -86,9 +78,4 @@ fn on_submit(data: FormInternal) -> Callback<SubmitEvent>{
                 submit_form(form).await;
             });
         })
-}
-
-fn submit_form(form: FormData) -> impl Future<Output = JsValue>{
-    let args = to_value(&form).unwrap();
-    invoke("submit_form", args)
 }

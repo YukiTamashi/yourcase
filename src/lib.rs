@@ -1,5 +1,6 @@
 use yew::prelude::*;
 mod components;
+mod tauri;
 use crate::components::form::*;
 
 #[derive(Clone, Copy)]

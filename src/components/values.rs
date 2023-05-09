@@ -1,4 +1,4 @@
-use web_sys::{HtmlScriptElement, HtmlSelectElement};
+use web_sys::HtmlSelectElement;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
@@ -16,7 +16,6 @@ pub fn values(value: &ValuesProp) -> Html {
             </select>
         </div>
     )
-
 }
 
 fn on_switch(handle: UseStateHandle<i32>) -> Callback<Event> {

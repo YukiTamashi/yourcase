@@ -1,5 +1,3 @@
-use serde::{Deserialize, Serialize};
-use wasm_bindgen::prelude::*;
 use yew::prelude::*;
 mod components;
 use crate::components::form::*;
@@ -28,7 +26,7 @@ pub fn app() -> Html {
             </main>
             <footer>
                 <button onclick={set_home}>{"Home"}</button>
-                <button onclick={set_options}>{"Another Menu"}</button>
+                <button onclick={set_options}>{"Options"}</button>
             </footer>
         </>
     }

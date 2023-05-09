@@ -1,9 +1,9 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize)]
 struct FormData{
     loja: String,
     promotor: String, 
@@ -13,9 +13,8 @@ struct FormData{
 
 #[tauri::command]
 fn submit_form(
-    form_data: FormData,
 ){
-    todo!()
+    
 }
 
 fn main() {

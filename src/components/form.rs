@@ -1,11 +1,14 @@
+use std::future::Future;
+
 use yew::prelude::*;
 use serde::{Serialize, Deserialize};
 use crate::components::input_field::*;
 use crate::components::values::*;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
+use serde_wasm_bindgen::to_value;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct FormData{
     loja: String,
     promotor: String, 
@@ -13,9 +16,40 @@ struct FormData{
     valor: i32,
 }
 
-struct FormDataBuilder{
-    
+impl From<FormInternal> for FormData{
+    fn from(value: FormInternal) -> Self {
+        FormData { 
+            loja: (*value.loja).clone(), 
+            promotor: (*value.promotor).clone(), 
+            modelo: (*value.modelo).clone(), 
+            valor: *value.valor 
+        }
+    }
 }
+
+#[derive(PartialEq, Clone)]
+struct FormInternal{
+    loja: UseStateHandle<String>,
+    promotor: UseStateHandle<String>, 
+    modelo: UseStateHandle<String>,
+    valor: UseStateHandle<i32>,
+}
+
+impl FormInternal{
+    fn reset(&self) {
+        self.loja.set(Default::default());
+        self.promotor.set(Default::default());
+        self.modelo.set(Default::default());
+        self.valor.set(Default::default());
+    }
+
+    fn reset_into(&self) -> FormData{
+        let form = FormData::from(self.clone());
+        self.reset();
+        form
+    }
+}
+
 
 #[wasm_bindgen]
 extern "C" {
@@ -25,46 +59,36 @@ extern "C" {
 
 #[function_component(Form)]
 pub fn form() -> Html{
-    let loja = Input{
-        name: String::from("Loja"), 
-        state: use_state(String::new)};
-    let promotor = Input{
-        name: String::from("Promotor"), 
-        state: use_state(String::new)};
-    let modelo = Input{
-        name: String::from("Modelo"), 
-        state: use_state(String::new)};
-    let valor = use_state(i32::default);
-
-    let states = vec!(
-        loja.state.clone(), 
-        promotor.state.clone(), 
-        modelo.state.clone()
-    );
-
-
-    let on_submit = Callback::from(move |e: SubmitEvent| {
-        e.prevent_default();
-        spawn_local(async move{
-
-            let args = serde_wasm_bindgen::to_value(&()).unwrap();
-            let submit = invoke("submit_form", args).await.as_string().unwrap();
-        });
-        for state in &states{
-            state.set(String::new());
-        }
-    });
+    let data = FormInternal{
+        loja: use_state(Default::default),
+        promotor: use_state(Default::default),
+        modelo: use_state(Default::default),
+        valor: use_state(Default::default)
+    };
 
     html!(
-        <form class="container form-box" onsubmit={on_submit}>
-            <InputField ..loja/>
-            <InputField ..promotor/>
-            <InputField ..modelo/>
-            <Values valor ={valor}/>
+        <form class="container form-box" onsubmit={on_submit(data.clone())}>
+            <InputField name ="Loja" state= {data.loja.clone()}/>
+            <InputField name ="Promotor" state= {data.promotor.clone()}/>
+            <InputField name ="Modelo" state= {data.modelo.clone()}/>
+            <Values valor = {data.valor}/>
             <button type="submit">{"Enviar"}</button>
         </form>
     )
 }
 
+fn on_submit(data: FormInternal) -> Callback<SubmitEvent>{
+        Callback::from(move |e: SubmitEvent| {
+            e.prevent_default();
+            //Needs to clone so it doesnt move the external data into the closure
+            let form = data.clone().reset_into();
+            spawn_local(async move{
+                submit_form(form).await;
+            });
+        })
+}
 
-
+fn submit_form(form: FormData) -> impl Future<Output = JsValue>{
+    let args = to_value(&form).unwrap();
+    invoke("submit_form", args)
+}

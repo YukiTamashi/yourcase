@@ -47,8 +47,6 @@ impl FormInternal{
     }
 }
 
-
-
 #[function_component(Form)]
 pub fn form() -> Html{
     let data = FormInternal{
@@ -57,9 +55,10 @@ pub fn form() -> Html{
         modelo: use_state(Default::default),
         valor: use_state(Default::default)
     };
+    let onsubmit = on_submit(data.clone());
 
     html!(
-        <form class="container form-box" onsubmit={on_submit(data.clone())}>
+        <form class="container form-box" {onsubmit}>
             <InputField name ="Loja" state= {data.loja.clone()}/>
             <InputField name ="Promotor" state= {data.promotor.clone()}/>
             <InputField name ="Modelo" state= {data.modelo.clone()}/>

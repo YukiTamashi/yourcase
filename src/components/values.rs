@@ -26,7 +26,6 @@ fn on_switch(handle: UseStateHandle<i32>) -> Callback<Event> {
     })
 }
 
-
 fn create_options() -> Vec<Html> {
     vec![
         html! { <option value="0">{"Valor"}</option> },

@@ -50,7 +50,7 @@ diesel::table! {
 
 diesel::table! {
     store (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         name -> Text,
     }
 }

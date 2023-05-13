@@ -1,12 +1,31 @@
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
+use serde::Deserialize;
 use crate::database::schema::*;
 
-#[derive(Queryable, Identifiable, PartialEq, Debug)]
+#[derive(Queryable, Identifiable, PartialEq, Debug, Deserialize)]
 #[diesel(table_name = store)]
 pub struct Store {
     pub id: i32,
     pub name: String,
+}
+
+#[derive(Insertable)]
+#[diesel(table_name = store)]
+pub struct NewStore {
+    pub name: String,
+}
+
+impl NewStore{
+    fn new(name: String) -> Self{
+        Self{name}
+    }
+    fn insert(self, connection: &mut SqliteConnection) -> Result<usize,diesel::result::Error>{
+        diesel::insert_into(store::table)
+            .values(&self)
+            .returning(store::dsl::id)
+            .execute(connection)
+    }
 }
 
 #[derive(Queryable, Identifiable, PartialEq, Debug)]

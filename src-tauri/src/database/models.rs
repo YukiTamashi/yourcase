@@ -17,10 +17,10 @@ pub struct NewStore {
 }
 
 impl NewStore{
-    fn new(name: String) -> Self{
+    pub fn new(name: String) -> Self{
         Self{name}
     }
-    fn insert(self, connection: &mut SqliteConnection) -> Result<usize,diesel::result::Error>{
+    pub fn insert(self, connection: &mut SqliteConnection) -> Result<usize,diesel::result::Error>{
         diesel::insert_into(store::table)
             .values(&self)
             .returning(store::dsl::id)

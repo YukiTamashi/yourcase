@@ -8,9 +8,7 @@ fn main() {
     tauri::Builder::default()
         .manage(database)
         .invoke_handler(tauri::generate_handler![
-            submit_form, 
-            new_store,
-            test,
+            insert
             ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

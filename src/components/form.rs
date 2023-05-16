@@ -2,9 +2,8 @@ use yew::prelude::*;
 use serde::{Serialize, Deserialize};
 use crate::components::input_field::*;
 use crate::components::values::*;
-use crate::tauri::DatabaseType;
 use wasm_bindgen_futures::spawn_local;
-use crate::tauri::submit_form;
+use crate::tauri::insert;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FormData{
@@ -76,24 +75,7 @@ fn on_submit(data: FormInternal) -> Callback<SubmitEvent>{
             let form = data.clone().reset_into();
             spawn_local(async move{
                 //submit_form(form).await;
-                let a = TestA{name: "a".to_string()};
-                let b = TestB{name: "b".to_string()};
-                crate::tauri::test(a).await;
-                crate::tauri::test(b).await;
+                insert(form).await;
             });
         })
 }
-
-#[derive(Serialize)]
-struct TestA{
-    name: String
-}
-
-impl DatabaseType for TestA{}
-
-#[derive(Serialize)]
-struct TestB{
-    name: String
-}
-
-impl DatabaseType for TestB{}

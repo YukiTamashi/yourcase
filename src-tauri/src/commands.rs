@@ -1,7 +1,9 @@
+use std::ops::Deref;
+
 use diesel::{Insertable, SqliteConnection};
 use serde::Deserialize;
 use tauri::State;
-use crate::database::{Database, models::{NewStore, Store}};
+use crate::database::{Database, models::*};
 
 #[derive(Deserialize, Debug)]
 pub struct FormData{
@@ -9,10 +11,6 @@ pub struct FormData{
     promotor: String, 
     modelo: String,
     valor: i32
-}
-
-pub trait DatabaseType<'a, U>: std::fmt::Debug + Deserialize<'a>{
-    //fn insert(self, connection: &mut SqliteConnection) -> Result<U, diesel::result::Error>;
 }
 
 #[tauri::command]
@@ -23,32 +21,33 @@ pub fn submit_form(
 }
 
 #[tauri::command]
-pub fn new_store(
+pub fn insert(
     db: State<Database>,
-    args: NewStore
+    args: Tables
 ) -> Result<Store, tauri::InvokeError>{
     args.insert(&mut db.get_connection())
         .map_err(|_| tauri::InvokeError::from(""))
 }
 
-#[tauri::command]
-pub fn test/*<'a, U, T: DatabaseType<'a, U>>*/(
-    db: State<Database>,
-    /*args: T,*/
-)/* -> Result<U, tauri::InvokeError>*/{
-    println!("ok");
-    //args.insert(&mut db.get_connection()).map_err(|_| tauri::InvokeError::from(""))
+#[derive(Deserialize)]
+pub enum Tables{
+    Store(NewStore),
+    Promoter(NewPromoter),
+    Model(NewModel),
+    Promotion(NewPromotion),
+    Purchase(NewPurchase),
+    Payment(NewPayment),
 }
 
-#[derive(Deserialize, Debug)]
-struct TestA{
-    name: String
+impl Tables{
+    fn insert(self, connection: &mut SqliteConnection) -> Result<Store, diesel::result::Error>{
+        match self{
+            Tables::Store(data) => data.insert(connection),
+            Tables::Promoter(data) => data.insert(connection),
+            Tables::Model(data) => data.insert(connection),
+            Tables::Promotion(data) => data.insert(connection),
+            Tables::Purchase(data) => data.insert(connection),
+            Tables::Payment(data) => data.insert(connection),
+        }
+    }
 }
-
-impl<'a> DatabaseType<'a, TestC> for TestA{
-    
-}
-
-pub struct TestC{}
-
-impl<'a> DatabaseType<'a, TestC> for (){}

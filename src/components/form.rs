@@ -2,42 +2,43 @@ use yew::prelude::*;
 use serde::{Serialize, Deserialize};
 use crate::components::input_field::*;
 use crate::components::values::*;
+use crate::tauri::DatabaseType;
 use wasm_bindgen_futures::spawn_local;
 use crate::tauri::submit_form;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FormData{
-    loja: String,
-    promotor: String, 
-    modelo: String,
-    valor: i32,
+    store: String,
+    promoter: String, 
+    model: String,
+    value: i32,
 }
 
 impl From<FormInternal> for FormData{
     fn from(value: FormInternal) -> Self {
         FormData { 
-            loja: (*value.loja).clone(), 
-            promotor: (*value.promotor).clone(), 
-            modelo: (*value.modelo).clone(), 
-            valor: *value.valor 
+            store: (*value.store).clone(), 
+            promoter: (*value.promoter).clone(), 
+            model: (*value.model).clone(), 
+            value: *value.value 
         }
     }
 }
 
 #[derive(PartialEq, Clone)]
 struct FormInternal{
-    loja: UseStateHandle<String>,
-    promotor: UseStateHandle<String>, 
-    modelo: UseStateHandle<String>,
-    valor: UseStateHandle<i32>,
+    store: UseStateHandle<String>,
+    promoter: UseStateHandle<String>, 
+    model: UseStateHandle<String>,
+    value: UseStateHandle<i32>,
 }
 
 impl FormInternal{
     fn reset(&self) {
-        self.loja.set(Default::default());
-        self.promotor.set(Default::default());
-        self.modelo.set(Default::default());
-        self.valor.set(Default::default());
+        self.store.set(Default::default());
+        self.promoter.set(Default::default());
+        self.model.set(Default::default());
+        self.value.set(Default::default());
     }
 
     fn reset_into(&self) -> FormData{
@@ -50,19 +51,19 @@ impl FormInternal{
 #[function_component(Form)]
 pub fn form() -> Html{
     let data = FormInternal{
-        loja: use_state(Default::default),
-        promotor: use_state(Default::default),
-        modelo: use_state(Default::default),
-        valor: use_state(Default::default)
+        store: use_state(Default::default),
+        promoter: use_state(Default::default),
+        model: use_state(Default::default),
+        value: use_state(Default::default)
     };
     let onsubmit = on_submit(data.clone());
 
     html!(
         <form class="container form-box" {onsubmit}>
-            <InputField name ="Loja" state= {data.loja.clone()}/>
-            <InputField name ="Promotor" state= {data.promotor.clone()}/>
-            <InputField name ="Modelo" state= {data.modelo.clone()}/>
-            <Values valor = {data.valor}/>
+            <InputField name ="Loja" state= {data.store.clone()}/>
+            <InputField name ="Promotor" state= {data.promoter.clone()}/>
+            <InputField name ="Modelo" state= {data.model.clone()}/>
+            <Values value = {data.value}/>
             <button type="submit">{"Enviar"}</button>
         </form>
     )
@@ -74,7 +75,25 @@ fn on_submit(data: FormInternal) -> Callback<SubmitEvent>{
             //Needs to clone so it doesnt move the external data into the closure
             let form = data.clone().reset_into();
             spawn_local(async move{
-                submit_form(form).await;
+                //submit_form(form).await;
+                let a = TestA{name: "a".to_string()};
+                let b = TestB{name: "b".to_string()};
+                crate::tauri::test(a).await;
+                crate::tauri::test(b).await;
             });
         })
 }
+
+#[derive(Serialize)]
+struct TestA{
+    name: String
+}
+
+impl DatabaseType for TestA{}
+
+#[derive(Serialize)]
+struct TestB{
+    name: String
+}
+
+impl DatabaseType for TestB{}

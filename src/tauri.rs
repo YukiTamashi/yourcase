@@ -9,6 +9,10 @@ extern "C" {
     async fn invoke(cmd: &str, args: JsValue) -> JsValue;
 }
 
+pub trait DatabaseType: Serialize{}
+
+
+
 #[derive(Serialize)]
 struct Arguments<T: Serialize>{
     args: T
@@ -20,4 +24,12 @@ pub fn as_arg<T: Serialize>(arg: T) -> JsValue{
 
 pub fn submit_form(form: crate::components::form::FormData) -> impl Future<Output = JsValue>{
     invoke("submit_form", as_arg(form))
+}
+
+pub fn new_store(store: crate::components::db_management::Store) -> impl Future<Output = JsValue>{
+    invoke("new_store", as_arg(store))
+}
+
+pub fn test<T: DatabaseType>(data: T) -> impl Future<Output = JsValue>{
+    invoke("test", as_arg(data))
 }

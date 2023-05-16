@@ -3,15 +3,15 @@ use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
 pub struct ValuesProp{
-    pub valor: UseStateHandle<i32>
+    pub value: UseStateHandle<i32>
 }
 
 #[function_component(Values)]
 pub fn values(value: &ValuesProp) -> Html {
-    let on_switch = on_switch(value.valor.clone());
+    let on_switch = on_switch(value.value.clone());
     html!(
         <div>
-            <select id="value" value={(*value.valor).to_string()} onchange={on_switch}>
+            <select id="value" value={(*value.value).to_string()} onchange={on_switch}>
                 {for create_options()}
             </select>
         </div>

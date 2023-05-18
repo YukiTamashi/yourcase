@@ -1,30 +1,14 @@
-use std::ops::Deref;
-
-use diesel::{Insertable, SqliteConnection};
-use serde::Deserialize;
+use diesel::SqliteConnection;
+use serde::{Deserialize, Serialize};
 use tauri::State;
 use crate::database::{Database, models::*};
 
-#[derive(Deserialize, Debug)]
-pub struct FormData{
-    loja: String,
-    promotor: String, 
-    modelo: String,
-    valor: i32
-}
-
-#[tauri::command]
-pub fn submit_form(
-    args: FormData
-){
-    println!("{args:?}");
-}
 
 #[tauri::command]
 pub fn insert(
     db: State<Database>,
     args: Tables
-) -> Result<Store, tauri::InvokeError>{
+) -> Result<InsertReturn, tauri::InvokeError>{
     args.insert(&mut db.get_connection())
         .map_err(|_| tauri::InvokeError::from(""))
 }
@@ -36,18 +20,25 @@ pub enum Tables{
     Model(NewModel),
     Promotion(NewPromotion),
     Purchase(NewPurchase),
-    Payment(NewPayment),
 }
 
 impl Tables{
-    fn insert(self, connection: &mut SqliteConnection) -> Result<Store, diesel::result::Error>{
+    fn insert(self, connection: &mut SqliteConnection) -> Result<InsertReturn, diesel::result::Error>{
         match self{
-            Tables::Store(data) => data.insert(connection),
-            Tables::Promoter(data) => data.insert(connection),
-            Tables::Model(data) => data.insert(connection),
-            Tables::Promotion(data) => data.insert(connection),
-            Tables::Purchase(data) => data.insert(connection),
-            Tables::Payment(data) => data.insert(connection),
+            Tables::Store(data) => data.insert(connection).map(InsertReturn::Store),
+            Tables::Promoter(data) => data.insert(connection).map(InsertReturn::Promoter),
+            Tables::Model(data) => data.insert(connection).map(InsertReturn::Model),
+            Tables::Promotion(data) => data.insert(connection).map(InsertReturn::Promotion),
+            Tables::Purchase(data) => data.insert(connection).map(InsertReturn::Purchase),
         }
     }
+}
+
+#[derive(Serialize)]
+pub enum InsertReturn{
+    Store(Store),
+    Promoter(Promoter),
+    Model(Model),
+    Promotion(Promotion),
+    Purchase(Purchase)
 }

@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 use crate::components::input_field::*;
 use crate::components::values::*;
 use wasm_bindgen_futures::spawn_local;
-use crate::tauri::insert;
+use crate::tauri::Tables;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FormData{
@@ -75,7 +75,7 @@ fn on_submit(data: FormInternal) -> Callback<SubmitEvent>{
             let form = data.clone().reset_into();
             spawn_local(async move{
                 //submit_form(form).await;
-                insert(form).await;
+                
             });
         })
 }

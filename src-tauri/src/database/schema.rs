@@ -1,15 +1,15 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
-    model (id) {
-        id -> Nullable<Integer>,
+    models (id) {
+        id -> Integer,
         name -> Text,
     }
 }
 
 diesel::table! {
-    payment (id) {
-        id -> Nullable<Integer>,
+    payments (id) {
+        id -> Integer,
         date -> Integer,
         value -> Integer,
         net_received -> Integer,
@@ -18,54 +18,48 @@ diesel::table! {
 }
 
 diesel::table! {
-    promoter (id) {
-        id -> Nullable<Integer>,
+    promoters (id) {
+        id -> Integer,
         name -> Text,
         bank_id -> Nullable<Text>,
         store_id -> Integer,
         active -> Integer,
+        debt -> Integer,
     }
 }
 
 diesel::table! {
-    promotion (id) {
-        id -> Nullable<Integer>,
+    promotions (id) {
+        id -> Integer,
         date -> Integer,
-        paid -> Integer,
+        value -> Integer,
         model_id -> Integer,
         promoter_id -> Integer,
     }
 }
 
 diesel::table! {
-    purchase (id) {
-        id -> Nullable<Integer>,
+    purchases (id) {
+        id -> Integer,
         date -> Integer,
         description -> Text,
         value -> Integer,
-        debt -> Integer,
         promoter_id -> Integer,
     }
 }
 
 diesel::table! {
-    store (id) {
+    stores (id) {
         id -> Integer,
         name -> Text,
     }
 }
 
-diesel::joinable!(payment -> promoter (promoter_id));
-diesel::joinable!(promoter -> store (store_id));
-diesel::joinable!(promotion -> model (model_id));
-diesel::joinable!(promotion -> promoter (promoter_id));
-diesel::joinable!(purchase -> promoter (promoter_id));
-
 diesel::allow_tables_to_appear_in_same_query!(
-    model,
-    payment,
-    promoter,
-    promotion,
-    purchase,
-    store,
+    models,
+    payments,
+    promoters,
+    promotions,
+    purchases,
+    stores,
 );

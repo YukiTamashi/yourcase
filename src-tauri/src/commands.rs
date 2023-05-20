@@ -40,4 +40,5 @@ pub enum InsertReturn {
     Model(Model),
     Promotion(Promotion),
     Purchase(Purchase),
+    Payment(Payment),
 }

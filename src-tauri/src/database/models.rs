@@ -1,8 +1,8 @@
+use super::schema::*;
+use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use serde::{Deserialize, Serialize};
-use super::schema::*;
-
 
 #[derive(Serialize, Queryable, Identifiable, PartialEq, Debug)]
 pub struct Store {
@@ -16,9 +16,9 @@ pub struct NewStore {
     pub name: String,
 }
 
-impl NewStore{
-    pub fn new(name: String) -> Self{
-        Self{name}
+impl NewStore {
+    pub fn new(name: String) -> Self {
+        Self { name }
     }
     pub fn insert(self, connection: &mut SqliteConnection) -> Result<Store, diesel::result::Error> {
         diesel::insert_into(stores::dsl::stores)
@@ -39,14 +39,17 @@ pub struct Promoter {
 
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = promoters)]
-pub struct NewPromoter{
+pub struct NewPromoter {
     pub id: i32,
     pub name: String,
     pub store_id: i32,
 }
 
-impl NewPromoter{
-    pub fn insert(self, connection: &mut SqliteConnection) -> Result<Promoter, diesel::result::Error>{
+impl NewPromoter {
+    pub fn insert(
+        self,
+        connection: &mut SqliteConnection,
+    ) -> Result<Promoter, diesel::result::Error> {
         diesel::insert_into(promoters::dsl::promoters)
             .values(&self)
             .get_result(connection)
@@ -59,15 +62,14 @@ pub struct Model {
     pub name: String,
 }
 
-
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = models)]
-pub struct NewModel{
+pub struct NewModel {
     pub name: String,
 }
 
-impl NewModel{
-    pub fn insert(self, connection: &mut SqliteConnection) -> Result<Model, diesel::result::Error>{
+impl NewModel {
+    pub fn insert(self, connection: &mut SqliteConnection) -> Result<Model, diesel::result::Error> {
         diesel::insert_into(models::dsl::models)
             .values(&self)
             .get_result(connection)
@@ -83,18 +85,22 @@ pub struct Promotion {
     pub promoter_id: i32,
 }
 
-
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = promotions)]
-pub struct NewPromotion{
+pub struct NewPromotion {
     pub promoter_id: i32,
     pub model_id: i32,
-    pub value: i32
+    pub value: i32,
 }
 
-impl NewPromotion{
-    pub fn insert(self, connection: &mut SqliteConnection) -> Result<Promotion, diesel::result::Error>{
-        todo!()
+impl NewPromotion {
+    pub fn insert(
+        self,
+        connection: &mut SqliteConnection,
+    ) -> Result<Promotion, diesel::result::Error> {
+        diesel::insert_into(promotions::dsl::promotions)
+            .values((&self, promotions::dsl::date.eq(0)))
+            .get_result(connection)
     }
 }
 
@@ -104,22 +110,26 @@ pub struct Purchase {
     pub date: i32,
     pub description: String,
     pub value: i32,
-    pub debt: i32,
     pub promoter_id: i32,
 }
-
 
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = purchases)]
-pub struct NewPurchase{
+pub struct NewPurchase {
     pub id: i32,
-    pub promoter_id: i32,
     pub description: String,
+    pub value: i32,
+    pub promoter_id: i32,
 }
 
-impl NewPurchase{
-    pub fn insert(self, connection: &mut SqliteConnection) -> Result<Purchase, diesel::result::Error>{
-        todo!()
+impl NewPurchase {
+    pub fn insert(
+        self,
+        connection: &mut SqliteConnection,
+    ) -> Result<Purchase, diesel::result::Error> {
+        diesel::insert_into(purchases::dsl::purchases)
+            .values((&self, purchases::dsl::date.eq(0)))
+            .get_result(connection)
     }
 }
 
@@ -132,16 +142,18 @@ pub struct Payment {
     pub net_received: i32,
 }
 
-
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = payments)]
-pub struct NewPayment{
+pub struct NewPayment {
     pub promoter_id: i32,
     pub value: i32,
 }
 
-impl NewPayment{
-    pub fn insert(self, connection: &mut SqliteConnection) -> Result<Payment, diesel::result::Error>{
+impl NewPayment {
+    pub fn insert(
+        self,
+        connection: &mut SqliteConnection,
+    ) -> Result<Payment, diesel::result::Error> {
         todo!()
     }
 }

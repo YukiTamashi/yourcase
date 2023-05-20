@@ -1,20 +1,16 @@
+use crate::database::{models::*, Database};
 use diesel::SqliteConnection;
 use serde::{Deserialize, Serialize};
 use tauri::State;
-use crate::database::{Database, models::*};
-
 
 #[tauri::command]
-pub fn insert(
-    db: State<Database>,
-    args: Tables
-) -> Result<InsertReturn, tauri::InvokeError>{
+pub fn insert(db: State<Database>, args: Tables) -> Result<InsertReturn, tauri::InvokeError> {
     args.insert(&mut db.get_connection())
         .map_err(|_| tauri::InvokeError::from(""))
 }
 
 #[derive(Deserialize)]
-pub enum Tables{
+pub enum Tables {
     Store(NewStore),
     Promoter(NewPromoter),
     Model(NewModel),
@@ -22,9 +18,12 @@ pub enum Tables{
     Purchase(NewPurchase),
 }
 
-impl Tables{
-    fn insert(self, connection: &mut SqliteConnection) -> Result<InsertReturn, diesel::result::Error>{
-        match self{
+impl Tables {
+    fn insert(
+        self,
+        connection: &mut SqliteConnection,
+    ) -> Result<InsertReturn, diesel::result::Error> {
+        match self {
             Tables::Store(data) => data.insert(connection).map(InsertReturn::Store),
             Tables::Promoter(data) => data.insert(connection).map(InsertReturn::Promoter),
             Tables::Model(data) => data.insert(connection).map(InsertReturn::Model),
@@ -35,10 +34,10 @@ impl Tables{
 }
 
 #[derive(Serialize)]
-pub enum InsertReturn{
+pub enum InsertReturn {
     Store(Store),
     Promoter(Promoter),
     Model(Model),
     Promotion(Promotion),
-    Purchase(Purchase)
+    Purchase(Purchase),
 }

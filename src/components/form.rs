@@ -1,38 +1,39 @@
-use yew::prelude::*;
-use serde::{Serialize, Deserialize};
 use crate::components::input_field::*;
 use crate::components::values::*;
-use wasm_bindgen_futures::spawn_local;
+use crate::tauri::test;
 use crate::tauri::Tables;
+use serde::{Deserialize, Serialize};
+use wasm_bindgen_futures::spawn_local;
+use yew::prelude::*;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct FormData{
+pub struct FormData {
     store: String,
-    promoter: String, 
+    promoter: String,
     model: String,
     value: i32,
 }
 
-impl From<FormInternal> for FormData{
+impl From<FormInternal> for FormData {
     fn from(value: FormInternal) -> Self {
-        FormData { 
-            store: (*value.store).clone(), 
-            promoter: (*value.promoter).clone(), 
-            model: (*value.model).clone(), 
-            value: *value.value 
+        FormData {
+            store: (*value.store).clone(),
+            promoter: (*value.promoter).clone(),
+            model: (*value.model).clone(),
+            value: *value.value,
         }
     }
 }
 
 #[derive(PartialEq, Clone)]
-struct FormInternal{
+struct FormInternal {
     store: UseStateHandle<String>,
-    promoter: UseStateHandle<String>, 
+    promoter: UseStateHandle<String>,
     model: UseStateHandle<String>,
     value: UseStateHandle<i32>,
 }
 
-impl FormInternal{
+impl FormInternal {
     fn reset(&self) {
         self.store.set(Default::default());
         self.promoter.set(Default::default());
@@ -40,7 +41,7 @@ impl FormInternal{
         self.value.set(Default::default());
     }
 
-    fn reset_into(&self) -> FormData{
+    fn reset_into(&self) -> FormData {
         let form = FormData::from(self.clone());
         self.reset();
         form
@@ -48,12 +49,12 @@ impl FormInternal{
 }
 
 #[function_component(Form)]
-pub fn form() -> Html{
-    let data = FormInternal{
+pub fn form() -> Html {
+    let data = FormInternal {
         store: use_state(Default::default),
         promoter: use_state(Default::default),
         model: use_state(Default::default),
-        value: use_state(Default::default)
+        value: use_state(Default::default),
     };
     let onsubmit = on_submit(data.clone());
 
@@ -68,14 +69,14 @@ pub fn form() -> Html{
     )
 }
 
-fn on_submit(data: FormInternal) -> Callback<SubmitEvent>{
-        Callback::from(move |e: SubmitEvent| {
-            e.prevent_default();
-            //Needs to clone so it doesnt move the external data into the closure
-            let form = data.clone().reset_into();
-            spawn_local(async move{
-                //submit_form(form).await;
-                
-            });
-        })
+fn on_submit(data: FormInternal) -> Callback<SubmitEvent> {
+    Callback::from(move |e: SubmitEvent| {
+        e.prevent_default();
+        //Needs to clone so it doesnt move the external data into the closure
+        let form = data.clone().reset_into();
+        spawn_local(async move {
+            //submit_form(form).await;
+            test().await;
+        });
+    })
 }

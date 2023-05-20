@@ -4,12 +4,11 @@ mod tauri;
 use crate::components::form::*;
 
 #[derive(Clone, Copy)]
-enum Menu{
+enum Menu {
     Main,
     Management,
-    Options
+    Options,
 }
-
 
 #[function_component(App)]
 pub fn app() -> Html {
@@ -18,10 +17,10 @@ pub fn app() -> Html {
     let set_mng = set_menu(Menu::Management, menu_state.clone());
     let set_options = set_menu(Menu::Options, menu_state.clone());
 
-    let current_display = match *menu_state{
+    let current_display = match *menu_state {
         Menu::Main => html!(<Form />),
         Menu::Management => html!(),
-        Menu::Options => html!()
+        Menu::Options => html!(),
     };
 
     html! {
@@ -38,12 +37,6 @@ pub fn app() -> Html {
     }
 }
 
-fn set_menu(option: Menu, handle: UseStateHandle<Menu>) -> Callback<MouseEvent>{
-    Callback::from(move |_| 
-        handle.set(option))
+fn set_menu(option: Menu, handle: UseStateHandle<Menu>) -> Callback<MouseEvent> {
+    Callback::from(move |_| handle.set(option))
 }
-
-
-
-
-

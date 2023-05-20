@@ -2,8 +2,8 @@ use web_sys::HtmlSelectElement;
 use yew::prelude::*;
 
 #[derive(Properties, PartialEq)]
-pub struct ValuesProp{
-    pub value: UseStateHandle<i32>
+pub struct ValuesProp {
+    pub value: UseStateHandle<i32>,
 }
 
 #[function_component(Values)]

@@ -13,6 +13,7 @@ wasm-bindgen-futures = "0.4"
 web-sys = {version = "0.3", features =["HtmlSelectElement"]}
 js-sys = "0.3"
 surrealdb = "1.0.0-beta.9"
+chrono = "0.4.24"
 
 [workspace]
 members = ["src-tauri"]

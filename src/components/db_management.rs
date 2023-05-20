@@ -1,12 +1,12 @@
 use serde::Serialize;
 
 #[derive(Serialize)]
-pub struct Store{
-    name: String
+pub struct Store {
+    name: String,
 }
 
 #[derive(Clone, Copy)]
-enum Management{
+enum Management {
     Main,
     NewStore,
     NewPromoter,

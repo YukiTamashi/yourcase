@@ -7,9 +7,7 @@ fn main() {
     let database = Database::default();
     tauri::Builder::default()
         .manage(database)
-        .invoke_handler(tauri::generate_handler![
-            insert
-            ])
+        .invoke_handler(tauri::generate_handler![insert])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

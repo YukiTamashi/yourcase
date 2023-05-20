@@ -7,7 +7,6 @@ use directories::ProjectDirs;
 use dotenvy::dotenv;
 use lazy_static::lazy_static;
 use std::env;
-use std::path::Path;
 use std::sync::Mutex;
 
 pub struct Database(Mutex<SqliteConnection>);

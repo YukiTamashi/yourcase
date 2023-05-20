@@ -1,8 +1,8 @@
 use super::schema::*;
-use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use serde::{Deserialize, Serialize};
+use crate::epoch_now;
 
 #[derive(Serialize, Queryable, Identifiable, PartialEq, Debug)]
 pub struct Store {
@@ -99,7 +99,7 @@ impl NewPromotion {
         connection: &mut SqliteConnection,
     ) -> Result<Promotion, diesel::result::Error> {
         diesel::insert_into(promotions::dsl::promotions)
-            .values((&self, promotions::dsl::date.eq(0)))
+            .values((&self, promotions::dsl::date.eq(epoch_now())))
             .get_result(connection)
     }
 }
@@ -128,7 +128,7 @@ impl NewPurchase {
         connection: &mut SqliteConnection,
     ) -> Result<Purchase, diesel::result::Error> {
         diesel::insert_into(purchases::dsl::purchases)
-            .values((&self, purchases::dsl::date.eq(0)))
+            .values((&self, purchases::dsl::date.eq(epoch_now())))
             .get_result(connection)
     }
 }
@@ -147,6 +147,7 @@ pub struct Payment {
 pub struct NewPayment {
     pub promoter_id: i32,
     pub value: i32,
+    pub net_received: i32,
 }
 
 impl NewPayment {
@@ -154,6 +155,8 @@ impl NewPayment {
         self,
         connection: &mut SqliteConnection,
     ) -> Result<Payment, diesel::result::Error> {
-        todo!()
+        diesel::insert_into(payments::dsl::payments)
+            .values((&self, payments::dsl::date.eq(epoch_now())))
+            .get_result(connection)
     }
 }

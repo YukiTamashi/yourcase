@@ -4,13 +4,13 @@ use serde::{Deserialize, Serialize};
 use tauri::State;
 
 #[tauri::command]
-pub fn insert(db: State<Database>, args: Tables) -> Result<InsertReturn, tauri::InvokeError> {
+pub fn insert(db: State<Database>, args: Insertable) -> Result<Select, tauri::InvokeError> {
     args.insert(&mut db.get_connection())
         .map_err(|_| tauri::InvokeError::from(""))
 }
 
 #[derive(Deserialize)]
-pub enum Tables {
+pub enum Insertable {
     Store(NewStore),
     Promoter(NewPromoter),
     Model(NewModel),
@@ -18,23 +18,23 @@ pub enum Tables {
     Purchase(NewPurchase),
 }
 
-impl Tables {
+impl Insertable {
     fn insert(
         self,
         connection: &mut SqliteConnection,
-    ) -> Result<InsertReturn, diesel::result::Error> {
+    ) -> Result<Select, diesel::result::Error> {
         match self {
-            Tables::Store(data) => data.insert(connection).map(InsertReturn::Store),
-            Tables::Promoter(data) => data.insert(connection).map(InsertReturn::Promoter),
-            Tables::Model(data) => data.insert(connection).map(InsertReturn::Model),
-            Tables::Promotion(data) => data.insert(connection).map(InsertReturn::Promotion),
-            Tables::Purchase(data) => data.insert(connection).map(InsertReturn::Purchase),
+            Insertable::Store(data) => data.insert(connection).map(Select::Store),
+            Insertable::Promoter(data) => data.insert(connection).map(Select::Promoter),
+            Insertable::Model(data) => data.insert(connection).map(Select::Model),
+            Insertable::Promotion(data) => data.insert(connection).map(Select::Promotion),
+            Insertable::Purchase(data) => data.insert(connection).map(Select::Purchase),
         }
     }
 }
 
 #[derive(Serialize)]
-pub enum InsertReturn {
+pub enum Select {
     Store(Store),
     Promoter(Promoter),
     Model(Model),

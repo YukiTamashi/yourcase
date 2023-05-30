@@ -14,6 +14,7 @@ web-sys = {version = "0.3", features =["HtmlSelectElement"]}
 js-sys = "0.3"
 surrealdb = "1.0.0-beta.9"
 chrono = "0.4.24"
+yew_icons = { version = "0.7.2", features = [ "HeroiconsOutlineCog6Tooth", "HeroiconsOutlineHome", "HeroiconsOutlineBars3" ]}
 
 [workspace]
 members = ["src-tauri"]

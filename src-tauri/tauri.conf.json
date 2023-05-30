@@ -27,8 +27,13 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
-      "targets": "all"
+      "identifier": "com.yourcase.app",
+      "targets": "all",
+      "windows": {
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        }
+      }
     },
     "security": {
       "csp": null

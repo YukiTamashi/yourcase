@@ -10,7 +10,7 @@ pub struct Input {
 pub fn input_field(props: &Input) -> Html {
     html!(
         <input
-        class="centered-text"
+        class="h-6 text center"
         id={props.name.clone()}
         type="text" value={(*props.state).clone()}
         placeholder={props.name.clone()}

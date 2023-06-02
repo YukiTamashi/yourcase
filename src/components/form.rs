@@ -59,7 +59,7 @@ pub fn form() -> Html {
     let onsubmit = on_submit(data.clone());
 
     html!(
-        <form class="container form-box" {onsubmit}>
+        <form class="px-6 bg-black justify-center align-center grid grid-cols-1 flex-grow" {onsubmit}>
             <InputField name ="Loja" state= {data.store.clone()}/>
             <InputField name ="Promotor" state= {data.promoter.clone()}/>
             <InputField name ="Modelo" state= {data.model.clone()}/>

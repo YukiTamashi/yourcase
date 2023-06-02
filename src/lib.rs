@@ -25,8 +25,8 @@ pub fn app() -> Html {
     };
 
     html! {
-        <main class="background">
-            <main class="pattern main">
+        <main>
+            <main class="min-h-screen flex flex-col">
                 {current_display}
             </main>
             <footer>

@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeDevCommand": "trunk serve",
+    "beforeDevCommand": "tailwindcss -c ./tailwind.config.js -o ./tailwind.css && trunk serve",
     "beforeBuildCommand": "trunk build",
     "devPath": "http://localhost:1420",
     "distDir": "../dist",

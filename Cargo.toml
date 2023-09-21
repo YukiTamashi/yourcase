@@ -15,6 +15,8 @@ js-sys = "0.3"
 surrealdb = "1.0.0-beta.9"
 chrono = "0.4.24"
 yew_icons = { version = "0.7.2", features = [ "HeroiconsOutlineCog6Tooth", "HeroiconsOutlineHome", "HeroiconsOutlineBars3" ]}
+daisyui = {git = "https://github.com/fuzzycloud/tailyew.git" }
+yew-bootstrap = "0.5.15"
 
 [workspace]
 members = ["src-tauri"]

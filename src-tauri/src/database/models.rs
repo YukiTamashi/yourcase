@@ -1,8 +1,8 @@
 use super::schema::*;
+use crate::epoch_now;
 use diesel::prelude::*;
 use diesel::sqlite::SqliteConnection;
 use serde::{Deserialize, Serialize};
-use crate::epoch_now;
 
 #[derive(Serialize, Queryable, Identifiable, PartialEq, Debug)]
 pub struct Store {

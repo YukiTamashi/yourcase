@@ -1,10 +1,10 @@
 use crate::components::input_field::*;
 use crate::components::values::*;
 use crate::tauri::test;
-use crate::tauri::Tables;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen_futures::spawn_local;
 use yew::prelude::*;
+use yew_bootstrap::component::form::FormControl;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct FormData {
@@ -59,7 +59,8 @@ pub fn form() -> Html {
     let onsubmit = on_submit(data.clone());
 
     html!(
-        <form class="px-6 bg-black justify-center align-center grid grid-cols-1 flex-grow" {onsubmit}>
+        //add space in between each element needs class
+        <form class="justify-center align-center grid grid-cols-1 content-center p-2" {onsubmit}>
             <InputField name ="Loja" state= {data.store.clone()}/>
             <InputField name ="Promotor" state= {data.promoter.clone()}/>
             <InputField name ="Modelo" state= {data.model.clone()}/>

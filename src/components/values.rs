@@ -11,7 +11,9 @@ pub fn values(value: &ValuesProp) -> Html {
     let on_switch = on_switch(value.value.clone());
     html!(
         <div>
-            <select id="value" value={(*value.value).to_string()} onchange={on_switch}>
+            //class to add space around the select
+            <select class = "w-full rounded-md appearance-none bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:border-transparent" 
+                id="value" value={(*value.value).to_string()} onchange={on_switch}>
                 {for create_options()}
             </select>
         </div>

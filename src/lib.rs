@@ -25,32 +25,28 @@ pub fn app() -> Html {
     };
 
     html! {
-        <main>
-            <main class="min-h-screen flex flex-col">
+        <main class="h-screen">
+            {include_cdn()}
+            <header class="flex flex-grow justify-evenly sticky top-0 py-8">
+                <Icon icon_id={IconId::HeroiconsOutlineHome} onclick={set_home}/>
+                <Icon icon_id={IconId::HeroiconsOutlineBars3} onclick={set_mng}/>
+                <Icon icon_id={IconId::HeroiconsOutlineCog6Tooth} onclick={set_options}/>
+            </header>
+            <main class="bg-green-400 flex-grow flex items-center justify-center">
                 {current_display}
             </main>
-            <footer>
-                <button onclick={set_home}>
-                    <Icon icon_id={IconId::HeroiconsOutlineHome}/>
-                </button>
-                <button onclick={set_mng}>
-                    <Icon icon_id={IconId::HeroiconsOutlineBars3}/>
-                </button>
-                <button onclick={set_options}>
-                    <Icon icon_id={IconId::HeroiconsOutlineCog6Tooth}/>
-                </button>
-            </footer>
+            {include_cdn_js()}
         </main>
     }
 }
 
 #[function_component(Management)]
-fn management() -> Html{
+fn management() -> Html {
     html!()
 }
 
 #[function_component(Options)]
-fn options() -> Html{
+fn options() -> Html {
     html!()
 }
 

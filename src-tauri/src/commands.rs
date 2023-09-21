@@ -19,10 +19,7 @@ pub enum Insertable {
 }
 
 impl Insertable {
-    fn insert(
-        self,
-        connection: &mut SqliteConnection,
-    ) -> Result<Select, diesel::result::Error> {
+    fn insert(self, connection: &mut SqliteConnection) -> Result<Select, diesel::result::Error> {
         match self {
             Insertable::Store(data) => data.insert(connection).map(Select::Store),
             Insertable::Promoter(data) => data.insert(connection).map(Select::Promoter),

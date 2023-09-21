@@ -1,20 +1,27 @@
 use yew::prelude::*;
+use daisyui::prelude::Input;
+use daisyui::prelude::InputProps;
 
 #[derive(Properties, PartialEq, Clone)]
-pub struct Input {
+pub struct Props {
     pub name: String,
     pub state: UseStateHandle<String>,
 }
 
 #[function_component(InputField)]
-pub fn input_field(props: &Input) -> Html {
+pub fn input_field(props: &Props) -> Html {
+    let a = InputProps{};
     html!(
-        <input
-        class="h-6 text center"
-        id={props.name.clone()}
-        type="text" value={(*props.state).clone()}
-        placeholder={props.name.clone()}
-        oninput={on_input(props.state.clone())} />
+        <>
+        <Input />
+        </>
+        // //class to set horizontal size to 100%
+        // <input
+        // class="input w-full max-w-xs"
+        // id={props.name.clone()}
+        // type="text" value={(*props.state).clone()}
+        // placeholder={props.name.clone()}
+        // oninput={on_input(props.state.clone())} />
     )
 }
 
